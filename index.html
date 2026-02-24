@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthyHumanBean</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <h1>Healthy HumanBean</h1>
+            <p class="subtitle">by G.Md.Khader</p>
+        </div>
+    </header>
+
+    <nav class="app-nav">
+        <button class="tab-btn active" data-target="tab-essential">Essential</button>
+        <button class="tab-btn" data-target="tab-enterprise">Enterprise</button>
+    </nav>
+
+    <main class="app-main">
+        <!-- ENTERPRISE TAB CONTENT -->
+        <section id="tab-enterprise" class="tab-content">
+            <div class="card premium-card">
+                <div class="enterprise-icon">🏢</div>
+                <h2>Enterprise Edition</h2>
+                <p>Advanced AI triage, bulk patient management, and seamless EHR integrations for modern healthcare providers.</p>
+                <div class="status-badge">Requires Activation</div>
+                <button class="btn btn-primary mt-4 block-btn">Contact Sales</button>
+            </div>
+        </section>
+
+        <!-- ESSENTIAL TAB CONTENT -->
+        <section id="tab-essential" class="tab-content active">
+            
+            <!-- EXPECTATION SCREEN -->
+            <div id="screen-expectation" class="flow-screen active drop-in">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 30%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="screen-title">How It Works</h2>
+                    <ul class="feature-list">
+                        <li>
+                            <span class="icon">✓</span>
+                            <span>Answer guided questions</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span>Get urgency level</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span>Connect to right care</span>
+                        </li>
+                    </ul>
+
+                    <button class="btn btn-primary btn-large btn-pulsate mt-4" onclick="startTriage()">
+                        Start AI Health Check
+                    </button>
+                </div>
+            </div>
+
+            <!-- QUESTION 1 -->
+            <div id="screen-q1" class="flow-screen">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 40%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="question-text">What symptom are you experiencing?</h2>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-outline" onclick="answerQ1('Fever')">Fever</button>
+                        <button class="btn btn-outline" onclick="answerQ1('Chest Pain')">Chest Pain</button>
+                        <button class="btn btn-outline" onclick="answerQ1('Headache')">Headache</button>
+                        <button class="btn btn-outline" onclick="answerQ1('Stomach Pain')">Stomach Pain</button>
+                        <button class="btn btn-outline" onclick="answerQ1('Other')">Other</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTION 2 -->
+            <div id="screen-q2" class="flow-screen">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 50%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="question-text">How long has this been happening?</h2>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-outline" onclick="answerQ2('Less than 24 hours')">Less than 24 hours</button>
+                        <button class="btn btn-outline" onclick="answerQ2('1–3 days')">1–3 days</button>
+                        <button class="btn btn-outline" onclick="answerQ2('More than 3 days')">More than 3 days</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTION 3 -->
+            <div id="screen-q3" class="flow-screen">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 60%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="question-text">Rate your pain (1–10)</h2>
+                    
+                    <div class="slider-container">
+                        <input type="range" id="pain-slider" min="1" max="10" value="5" class="custom-slider" oninput="updateSliderValue(this.value)">
+                        <div class="slider-labels">
+                            <span>1 (Mild)</span>
+                            <span id="slider-val-display" class="slider-value-display">5</span>
+                            <span>10 (Severe)</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary block-btn mt-4" onclick="answerQ3()">Continue</button>
+                </div>
+            </div>
+
+            <!-- QUESTION 4 -->
+            <div id="screen-q4" class="flow-screen">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 70%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="question-text">Are you currently taking any medications?</h2>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-outline" onclick="answerQ4('Yes')">Yes, prescription or OTC</button>
+                        <button class="btn btn-outline" onclick="answerQ4('No')">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTION 5 -->
+            <div id="screen-q5" class="flow-screen">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 80%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="question-text">Do you have any pre-existing conditions?</h2>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-outline" onclick="answerQ5('Diabetes')">Diabetes</button>
+                        <button class="btn btn-outline" onclick="answerQ5('Heart Disease')">Heart Disease / Hypertension</button>
+                        <button class="btn btn-outline" onclick="answerQ5('Asthma')">Asthma / Respiratory</button>
+                        <button class="btn btn-outline" onclick="answerQ5('None')">None of the above</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTION 6 -->
+            <div id="screen-q6" class="flow-screen">
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 90%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="question-text">Are you experiencing any shortness of breath?</h2>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-outline action-urgent" onclick="answerQ6('Yes')">Yes</button>
+                        <button class="btn btn-outline" onclick="answerQ6('No')">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT SCREEN -->
+            <div id="screen-result" class="flow-screen">
+                <div class="card result-card">
+                    <div class="progress-container">
+                        <div class="progress-text">Progress: 100%</div>
+                        <div class="progress-track">
+                            <div class="progress-fill bg-success" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <h2 class="screen-title mb-2">Your Assessment</h2>
+                    
+                    <div class="assessment-box" id="assessment-box">
+                        <div class="risk-indicator" id="risk-indicator">
+                            <span class="risk-icon" id="risk-icon">🟡</span>
+                            <span class="risk-level" id="risk-level">Moderate Risk</span>
+                        </div>
+                        <p class="risk-message" id="risk-message">
+                            Based on your symptoms, this may require a general physician consultation within 24 hours.
+                        </p>
+                    </div>
+
+                    <div class="action-buttons mt-4">
+                        <button class="btn btn-primary block-btn mb-2">Complete Profile</button>
+                        <button class="btn btn-outline block-btn" onclick="resetFlow()">Start New Assessment</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-content">
+            <p class="footer-brand">HealthyHumanBean</p>
+            <p class="footer-author">by G.Md.Khader</p>
+            <p class="footer-contact">Contact: 9030712049</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
