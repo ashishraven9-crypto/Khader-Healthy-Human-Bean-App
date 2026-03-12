@@ -31,9 +31,22 @@ import {
   ChevronRight,
   Route,
   Loader2,
+  Building2,
 } from "lucide-react";
 
 type PlaceType = "hospital" | "pharmacy";
+
+interface CityOption {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}
+
+const AP_CITIES: CityOption[] = [
+  { id: "vijayawada", name: "Vijayawada", lat: 16.5062, lng: 80.6480 },
+  { id: "kurnool", name: "Kurnool", lat: 15.8281, lng: 78.0373 },
+];
 
 interface NearbyPlace {
   id: string;
@@ -64,6 +77,7 @@ export default function NearbyFinder() {
   const [error, setError] = useState<string | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<string>("vijayawada");
 
   // Clear existing markers
   const clearMarkers = useCallback(() => {
@@ -306,8 +320,9 @@ export default function NearbyFinder() {
       placesServiceRef.current = new google.maps.places.PlacesService(map);
       setMapReady(true);
 
-      // Immediately search with default AP location so users see results right away
-      const defaultLoc = { lat: 16.5062, lng: 80.6480 };
+      // Immediately search with default city location so users see results right away
+      const city = AP_CITIES.find((c) => c.id === "vijayawada") ?? AP_CITIES[0];
+      const defaultLoc = { lat: city.lat, lng: city.lng };
       setUserLocation(defaultLoc);
       setLoading(true);
 
@@ -372,7 +387,7 @@ export default function NearbyFinder() {
         new google.maps.marker.AdvancedMarkerElement({
           map,
           position: defaultLoc,
-          title: "Your Location (Andhra Pradesh)",
+          title: `Your Location (${city.name})`,
           content: createUserMarker(),
         });
 
@@ -395,6 +410,35 @@ export default function NearbyFinder() {
     [userLocation, searchNearby]
   );
 
+  // Switch city
+  const handleCitySwitch = useCallback(
+    (cityId: string) => {
+      setSelectedCity(cityId);
+      setSelectedPlace(null);
+      setError(null);
+      const city = AP_CITIES.find((c) => c.id === cityId);
+      if (!city || !mapRef.current) return;
+      const loc = { lat: city.lat, lng: city.lng };
+      setUserLocation(loc);
+      mapRef.current.panTo(loc);
+      mapRef.current.setZoom(13);
+
+      // Update user marker
+      if (userMarkerRef.current) {
+        userMarkerRef.current.map = null;
+      }
+      userMarkerRef.current = new google.maps.marker.AdvancedMarkerElement({
+        map: mapRef.current,
+        position: loc,
+        title: `Your Location (${city.name})`,
+        content: createUserMarker(),
+      });
+
+      searchNearby(activeType, loc);
+    },
+    [activeType, searchNearby, createUserMarker]
+  );
+
   // Open directions in Google Maps
   const openDirections = useCallback(
     (place: NearbyPlace) => {
@@ -412,47 +456,71 @@ export default function NearbyFinder() {
 
   return (
     <div className="space-y-5">
-      {/* Type Toggle & Location Button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2 bg-secondary/50 rounded-full p-1">
-          <button
-            onClick={() => handleTypeSwitch("hospital")}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              activeType === "hospital"
-                ? "bg-coral text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Hospital className="w-3.5 h-3.5" />
-            Hospitals
-          </button>
-          <button
-            onClick={() => handleTypeSwitch("pharmacy")}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              activeType === "pharmacy"
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Pill className="w-3.5 h-3.5" />
-            Pharmacies
-          </button>
+      {/* Controls Row */}
+      <div className="flex flex-col gap-3">
+        {/* City Selector */}
+        <div className="flex items-center gap-2">
+          <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span className="text-xs font-medium text-muted-foreground shrink-0">City:</span>
+          <div className="flex items-center gap-1.5 bg-secondary/50 rounded-full p-1">
+            {AP_CITIES.map((city) => (
+              <button
+                key={city.id}
+                onClick={() => handleCitySwitch(city.id)}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  selectedCity === city.id
+                    ? "bg-foreground text-background shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {city.name}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-full gap-1.5"
-          onClick={getUserLocation}
-          disabled={locationLoading}
-        >
-          {locationLoading ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <Locate className="w-3.5 h-3.5" />
-          )}
-          {locationLoading ? "Locating..." : "Update Location"}
-        </Button>
+        {/* Type Toggle & Location Button */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 bg-secondary/50 rounded-full p-1">
+            <button
+              onClick={() => handleTypeSwitch("hospital")}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activeType === "hospital"
+                  ? "bg-coral text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Hospital className="w-3.5 h-3.5" />
+              Hospitals
+            </button>
+            <button
+              onClick={() => handleTypeSwitch("pharmacy")}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activeType === "pharmacy"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Pill className="w-3.5 h-3.5" />
+              Pharmacies
+            </button>
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full gap-1.5"
+            onClick={getUserLocation}
+            disabled={locationLoading}
+          >
+            {locationLoading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Locate className="w-3.5 h-3.5" />
+            )}
+            {locationLoading ? "Locating..." : "Update Location"}
+          </Button>
+        </div>
       </div>
 
       {/* Error Alert */}

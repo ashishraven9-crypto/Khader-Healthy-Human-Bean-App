@@ -40,21 +40,23 @@ import {
 const EMERGENCY_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663338606801/9fjxRSTui3pzpChKNY8CxL/emergency-bg-9QahftvhpRkHhfHDqc9uoE.webp";
 
 const emergencyNumbers = [
-  { country: "United States", number: "911", label: "Emergency Services" },
-  { country: "United Kingdom", number: "999", label: "Emergency Services" },
-  { country: "European Union", number: "112", label: "Emergency Services" },
-  { country: "Australia", number: "000", label: "Emergency Services" },
-  { country: "India", number: "112", label: "Emergency Services" },
-  { country: "Canada", number: "911", label: "Emergency Services" },
-  { country: "Japan", number: "119", label: "Ambulance" },
-  { country: "China", number: "120", label: "Ambulance" },
+  { country: "Emergency (All India)", number: "112", label: "Police, Fire, Ambulance" },
+  { country: "Police", number: "100", label: "Police Control Room" },
+  { country: "Ambulance", number: "108", label: "Emergency Medical Services" },
+  { country: "Fire Brigade", number: "101", label: "Fire Emergency" },
+  { country: "Women Helpline", number: "1091", label: "Women in Distress" },
+  { country: "Child Helpline", number: "1098", label: "Children in Need" },
+  { country: "Disaster Management", number: "1078", label: "NDMA Helpline" },
+  { country: "Road Accident", number: "1073", label: "Road Accident Emergency" },
 ];
 
 const helplines = [
-  { name: "Suicide Prevention Lifeline", number: "988", desc: "24/7 crisis support", icon: Brain },
-  { name: "Poison Control", number: "1-800-222-1222", desc: "Poisoning emergencies", icon: Bug },
-  { name: "Domestic Violence Hotline", number: "1-800-799-7233", desc: "Safety and support", icon: Shield },
-  { name: "Crisis Text Line", number: "Text HOME to 741741", desc: "Text-based crisis support", icon: Phone },
+  { name: "iCall (Mental Health)", number: "9152987821", desc: "Psychosocial helpline by TISS", icon: Brain },
+  { name: "Vandrevala Foundation", number: "18602662345", desc: "24/7 mental health support", icon: Brain },
+  { name: "Women Helpline", number: "181", desc: "Women in distress - 24/7", icon: Shield },
+  { name: "Senior Citizen Helpline", number: "14567", desc: "Elder abuse & support", icon: Phone },
+  { name: "Kiran Mental Health", number: "18005990019", desc: "Govt. mental health helpline", icon: Brain },
+  { name: "Childline India", number: "1098", desc: "Child protection services", icon: Shield },
 ];
 
 const firstAidGuides = [
@@ -65,7 +67,7 @@ const firstAidGuides = [
     severity: "critical",
     steps: [
       "Check the scene for safety and check the person for responsiveness.",
-      "Call 911 or ask someone else to call immediately.",
+      "Call 112 (or 108 for ambulance) or ask someone else to call immediately.",
       "Place the person on their back on a firm, flat surface.",
       "Place the heel of one hand on the center of the chest, between the nipples.",
       "Place your other hand on top, interlocking fingers.",
@@ -86,7 +88,7 @@ const firstAidGuides = [
       "Grasp your fist with your other hand.",
       "Perform quick, upward thrusts into the abdomen.",
       "Repeat until the object is dislodged or the person can breathe.",
-      "If the person becomes unconscious, begin CPR and call 911.",
+      "If the person becomes unconscious, begin CPR and call 112.",
     ],
   },
   {
@@ -95,7 +97,7 @@ const firstAidGuides = [
     icon: Droplets,
     severity: "high",
     steps: [
-      "Call 911 if bleeding is severe or won't stop.",
+      "Call 112 if bleeding is severe or won't stop.",
       "Apply direct pressure to the wound using a clean cloth or bandage.",
       "If blood soaks through, add more cloth on top — do not remove the first layer.",
       "Elevate the injured area above the heart if possible.",
@@ -114,7 +116,7 @@ const firstAidGuides = [
       "Remove jewelry or tight clothing near the burn before swelling occurs.",
       "Cover the burn loosely with a sterile, non-stick bandage.",
       "Do NOT apply ice, butter, or ointments to the burn.",
-      "For severe burns (large area, deep, or on face/hands/feet), call 911.",
+      "For severe burns (large area, deep, or on face/hands/feet), call 112.",
       "Give over-the-counter pain relief if needed.",
     ],
   },
@@ -128,7 +130,7 @@ const firstAidGuides = [
       "Apply ice wrapped in cloth to reduce swelling (20 minutes on, 20 minutes off).",
       "Immobilize the area with a splint if available.",
       "Elevate the injured limb if possible.",
-      "Call 911 if the bone is protruding, the person cannot move, or there is heavy bleeding.",
+      "Call 112 if the bone is protruding, the person cannot move, or there is heavy bleeding.",
       "Treat for shock if the person feels faint or dizzy.",
     ],
   },
@@ -138,7 +140,7 @@ const firstAidGuides = [
     icon: ThermometerSun,
     severity: "high",
     steps: [
-      "Call 911 immediately — heat stroke is a medical emergency.",
+      "Call 112 immediately — heat stroke is a medical emergency.",
       "Move the person to a cool, shaded area.",
       "Remove excess clothing.",
       "Cool the person rapidly: apply cold water or ice packs to neck, armpits, and groin.",
@@ -153,7 +155,7 @@ const firstAidGuides = [
     icon: Bug,
     severity: "critical",
     steps: [
-      "Call 911 immediately.",
+      "Call 112 immediately.",
       "If the person has an EpiPen, help them use it on the outer thigh.",
       "Have the person lie down with legs elevated (unless they have trouble breathing).",
       "Loosen tight clothing.",
@@ -257,7 +259,7 @@ export default function EmergencyPage() {
               >
                 <Card className="border-border/50 mb-6">
                   <CardHeader>
-                    <CardTitle className="font-serif text-lg">Emergency Numbers by Country</CardTitle>
+                    <CardTitle className="font-serif text-lg">Indian Emergency Numbers</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -384,8 +386,8 @@ export default function EmergencyPage() {
                 <Alert className="border-primary/20 bg-primary/5">
                   <Info className="w-4 h-4 text-primary" />
                   <AlertDescription className="text-sm text-muted-foreground">
-                    These helplines are primarily for the United States. If you are in another country,
-                    please search for your local crisis helplines.
+                    These helplines are for India. All numbers are toll-free and available 24/7.
+                    In case of a life-threatening emergency, always dial <strong>112</strong> first.
                   </AlertDescription>
                 </Alert>
               </motion.div>
